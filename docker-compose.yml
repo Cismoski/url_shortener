@@ -19,6 +19,8 @@ services:
     container_name: url-shortener-backend
     image: cismoski/url-shortener-backend:latest
     restart: unless-stopped
+    env_file:
+      - ./.env
     networks:
       - url-shortener_internals_network
     ports:
@@ -51,6 +53,8 @@ services:
     container_name: url-shortener-frontend
     image: cismoski/url-shortener-frontend:latest
     restart: unless-stopped
+    env_file:
+      - ./.env
     networks:
       - url-shortener_internals_network
     ports:
