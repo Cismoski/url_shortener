@@ -17,7 +17,11 @@ services:
 
   backend:
     container_name: url-shortener-backend
+<<<<<<< HEAD
     image: gabrielcismoski/url-shortener-backend:latest
+=======
+    image: cismoski/url-shortener-backend:latest
+>>>>>>> 1d164eb (init)
     restart: unless-stopped
     networks:
       - url-shortener_internals_network
@@ -49,7 +53,11 @@ services:
 
   frontend:
     container_name: url-shortener-frontend
+<<<<<<< HEAD
     image: gabrielcismoski/url-shortener-frontend:latest
+=======
+    image: cismoski/url-shortener-frontend:latest
+>>>>>>> 1d164eb (init)
     restart: unless-stopped
     networks:
       - url-shortener_internals_network
