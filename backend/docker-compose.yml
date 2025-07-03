@@ -1,0 +1,38 @@
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+    restart: unless-stopped
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1M'
+        max-file: '5'
+
+  db:
+    image: postgres:17.5-alpine3.22
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=url_shortener_admin
+      - POSTGRES_PASSWORD=url_shortener_pass
+      - POSTGRES_DB=url_shortener_db
+      - TZ=UTC
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      # - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1M'
+        max-file: '5'
+
+volumes:
+  db_data:
+    driver: local

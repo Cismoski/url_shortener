@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id        BigInt  @id @default(autoincrement())
+
+  userKey String @map("user_key") @db.Uuid @default(dbgenerated("gen_random_uuid()"))
+
+  email     String  @unique
+  password  String
+  fullName  String  @map("full_name")
+
+  urls      Url[]
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("users")
+  @@index([email], type: Hash)
+}
+
+model Url {
+  id        BigInt  @id @default(autoincrement())
+
+  userId    BigInt @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+
+  historyVisits    UrlVisit[]
+
+  slug        String  @unique
+  originalUrl String  @map("original_url")
+  totalVisits      Int @default(0)  @map("total_visits")
+
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+  isDeleted   Boolean?  @default(false) @map("is_deleted")
+
+  @@map("urls") 
+  @@index([slug], type: Hash)
+  @@index([userId], type: Hash)
+}
+
+model UrlVisit {
+  id        BigInt  @id @default(autoincrement())
+
+  urlId     BigInt @map("url_id")
+  url       Url     @relation(fields: [urlId], references: [id])
+
+  day       Int
+  month     Int
+  year      Int
+  hour      Int
+  browser   String? @map("browser")
+  device    String? @map("device")
+  os        String? @map("os")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("url_visits")
+}

@@ -1,0 +1,75 @@
+services:
+  nginx:
+    container_name: url-shortener-nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - url-shortener_network
+      - url-shortener_internals_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1M"
+        max-file: "10"
+
+  backend:
+    container_name: url-shortener-backend
+    image: gabrielcismoski/url-shortener-backend:latest
+    restart: unless-stopped
+    networks:
+      - url-shortener_internals_network
+    ports:
+      - "8080:8080"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1M"
+        max-file: "10"
+
+  db:
+    container_name: url-shortener-db
+    image: postgres:17.5-alpine3.22
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./.env
+    volumes:
+      - url_shortener_data:/var/lib/postgresql/data
+    networks:
+      - url-shortener_internals_network
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1M"
+        max-file: "5"
+
+  frontend:
+    container_name: url-shortener-frontend
+    image: gabrielcismoski/url-shortener-frontend:latest
+    restart: unless-stopped
+    networks:
+      - url-shortener_internals_network
+    ports:
+      - "3000:3000"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1M"
+        max-file: "10"
+
+volumes:
+  url_shortener_data:
+    driver: local
+
+networks:
+  url-shortener_network:
+    name: url-shortener_network
+    driver: bridge
+
+  url-shortener_internals_network:
+    name: url-shortener_internals_network
+    driver: bridge
