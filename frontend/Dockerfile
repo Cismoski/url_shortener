@@ -6,11 +6,14 @@ FROM node:22.17-alpine3.22 AS builder
 WORKDIR /app/apps/frontend
 COPY . .
 
+ENV PORT=3000
+
 RUN npm ci
 RUN npm run build
 
 # Stage 2: Serve the built application with Nginx
 FROM nginx:alpine
 COPY --from=builder /app/apps/frontend/build /usr/share/nginx/html
-EXPOSE 3000
+ENV PORT=3000
+
 CMD ["nginx", "-g", "daemon off;"]
