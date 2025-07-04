@@ -9,8 +9,8 @@ COPY . .
 RUN npm ci
 RUN npm run build
 
-# Expose port 3000 for the application
+# Stage 2: Serve the built application with Nginx
+FROM nginx:alpine
+COPY --from=builder /app/apps/frontend/build /usr/share/nginx/html
 EXPOSE 3000
-
-# Start the application
-CMD [ "npm", "run", "start" ]
+CMD ["nginx", "-g", "daemon off;"]
