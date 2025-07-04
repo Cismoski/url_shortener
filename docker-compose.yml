@@ -72,7 +72,7 @@ volumes:
 networks:
   url-shortener_network:
     name: url-shortener_network
-    driver: bridge
+    external: true
 
   url-shortener_internals_network:
     name: url-shortener_internals_network
