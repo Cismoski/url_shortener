@@ -4,6 +4,8 @@ A full-stack URL shortening application with analytics tracking, built with mode
 
 **[Try the live version at https://gabrielcismoski.com](https://gabrielcismoski.com)**
 
+**[Check the API swagger at https://api.gabrielcismoski.com/swagger](https://api.gabrielcismoski.com/swagger)**
+
 ## Project Overview
 
 This URL shortener application allows users to create shortened URLs with optional custom slugs, track visit analytics, and manage their shortened links through a user-friendly dashboard. The project is split into two main components:
